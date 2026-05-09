@@ -1,0 +1,249 @@
+################################################################################
+#        _____                           _   __         __                     #
+#       / ___/  _____  ____ _   ____    / | / /  ___   / /_    __     __       #
+#       \__ \  / ___/ / __ `/  / __ \  /  |/ /  / _ \ / __/ __/ /_ __/ /_      #
+#      ___/ / / /__  / /_/ /  / / / / / /|  /  /  __// /_  /_  __//_  __/      #
+#     /____/  \___/  \__,_/  /_/ /_/ /_/ |_/   \___/ \__/   /_/    /_/         #
+#                                                                              #
+################################################################################
+#                                                                              #
+# TL;DR: How to download ScanNet++ data                                        #
+# -------------------------------------                                        #
+# 1. Set your personalized token in `token`.                                   #
+# 2. Set the download location in `data_root`.                                 #
+# 3. (Optional) All scenes are downloaded by default. Select the splits to     #
+#    download in `download_splits` or individual scenes by ID in               #
+#    `download_scenes`. Scene lists can be downloaded by setting               #
+#    `metadata_only` to true.                                                  #
+# 4. (Optional) The assets in `default_assets` are downloaded by default.      #
+#    Set `download_assets` or `download_options` to specify individual assets  #
+#    or asset groups.                                                          #
+# 6. Run: pip install -r requirements.txt                                      #
+# 5. Run: python download_scannetpp.py download_scannetpp.yml                  #
+#                                                                              #
+# Other datasets available through this script:                                #
+# - ScanNet++GS:                                                               #
+#   - configure the scene list and download directory at the end of the script #
+#   - this downloads the GS .ply files for each scene                          #
+################################################################################
+
+###### token ###### enter your personalized token here
+token: YOUR_TOKEN_HERE
+###### download the data here ######
+# specify an absolute path
+data_root: /home/sm13552/ondemand/ditr/data/scannetpp_raw
+
+# root url of the data
+root_url: https://scannetpp.mlsg.cit.tum.de/scannetpp/download/v2?version=v1&token=TOKEN&file=FILEPATH
+
+# download the metadata only, change this to true
+metadata_only: false
+
+# dont download files, just check if they exist for download
+dry_run: false
+
+# show output for each file being download and unzipped
+verbose: false
+
+###### specify the scenes to download ######
+# select the splits to download
+# download_splits: [nvs_sem_train, nvs_sem_val, nvs_test, sem_test, nvs_test_iphone]
+
+# Articulate3D scene IDs (237 scenes from ScanNet++ used in the Articulate3D challenge)
+download_scenes: [036bce3393, 076c822ecc, 079a326597, 07f5b601ee, 07ff1c45bb, 08bbbdcc3d, 09bced689e, 09c1414f1b, 0a184cf634, 0a5c013435, 0a76e06478, 0a7cc12c0e, 0b031f3119, 0cf2e9402d, 0d2ee665be, 0e75f3c4d9, 104acbf7d2, 108ec0b806, 116456116b, 1204e08f17, 13285009a4, 1366d5ae89, 13c3e046d7, 16c9bd2e1e, 1831b3823a, 1841a0b525, 1a8e0d78c0, 1ada7a0617, 1ae9e5d2a6, 1c4b893630, 1d003b07bd, 210f741378, 21d970d8de, 251443268c, 25927bb04c, 25f3b7a318, 260db9cf5a, 260fa55d50, 27dd4da69e, 280b83fcf3, 281ba69af1, 281bc17764, 286b55a2bf, 28a9ee4557, 290ef3f2c9, 2970e95b65, 2a496183e1, 2b1dc6d6a5, 2e74812d00, 302a7f6b67, 303745abc7, 30966f4c6e, 30f4a2b44d, 31a2c91c43, 320c3af000, 32280ecbca, 324d07a5b3, 355e5e32db, 37ea1c52f0, 3864514494, 38d58a7a31, 3928249b53, 394a542a19, 39e6ee46df, 39f36da05b, 3c95c89d61, 3db0a1c8f3, 3e8bba0176, 3e928dc2f6, 3f15a9266d, 3f1e1610de, 40aec5fffa, 40b56bf310, 410c470782, 419cbe7c11, 41b00feddb, 4318f8bb3c, 4422722c49, 45b0dac5e3, 47b37eb6f9, 480ddaadc0, 484ad681df, 49a82360aa, 4a1a3a7dc5, 4ba22fa7e4, 4c5c60fa76, 4ea827f5a1, 50809ea0d8, 54b6127146, 55b2bf8036, 5654092cc2, 5656608266, 56a0ec536c, 5748ce6f01, 578511c8a9, 5942004064, 59e3f1ea37, 5a269ba6fe, 5d152fab1b, 5eb31827b7, 5ee7c22ba0, 5f99900f09, 5fb5d2dbf2, 6115eddb86, 61adeff7d5, 6464461276, 646af5e14b, 6855e1ac32, 689fec23d7, 69e5939669, 6b40d1a939, 6cc2231b9c, 6d89a7320d, 6ee2fc1070, 6f1848d1e3, 7079b59642, 709ab5bffe, 712dc47104, 75d29d69b8, 7831862f02, 7977624358, 7b6477cb95, 7bc286c1b6, 7cd2ac43b4, 7e09430da7, 7e7cd69a59, 7eac902fd5, 7f4d173c9c, 80ffca8a48, 8133208cb6, 824d9cfa6e, 825d228aec, 85251de7d1, 87f6d7d564, 88627b561e, 8890d0a267, 88cf747085, 89214f3ca0, 893fb90e89, 8a20d62ac0, 8a35ef3cfe, 8b2c0938d6, 8b5caf3398, 8be0cd3817, 8d563fc2cc, 8e00ac7f59, 8e6ff28354, 8f82c394d6, 9071e139d9, 9460c8889d, 9471b8d485, 94ee15e8ba, 95d525fbfd, 961911d451, 9859de300f, 98fe276aa8, 99fa5c25e1, 9f139a318d, 9f21bdec45, 9f79564dbf, a05ee63164, a1d9da703c, a29cccc784, a4e227f506, a980334473, aaa11940d3, ab046f8faf, ab11145646, ab6983ae6c, acd69a1746, acd95847c5, b0a08200c9, b1d75ecd55, b20a261fdf, bb87c292ad, bcd2436daf, c0f5742640, c173f62b15, c4c04e6d6c, c50d2d1d42, c545851c4f, c5f701a8c7, c856c41c99, c8f2218ee2, c9abde4c4b, cbd4b3055e, cc5237fd77, ccfd3ed9c7, cf1ffd871d, d2f44bf242, d415cc449b, d6702c681d, d6cbe4b28b, d6d9ddb03f, d755b3d9d8, d7abfc4b17, d918af9c5f, daffc70503, dc263dfbf0, dfac5b38df, e01b287af5, e050c15a8d, e0abd740ba, e0de253456, e1b1d9de55, e398684d27, e3ecd49e2b, e7af285f7d, e898c76c1f, e8e81396b6, e8ea9b4da8, e91722b5a3, e9ac2fc517, e9e16b6043, eb4bc76767, ebc200e928, ed2216380b, ef18cf0708, ef25276c25, ef69d58016, f07340dfea, f248c2bcdc, f25f5e6f63, f2dc06b1d2, f34d532901, f3685d06a9, f3d64c30f8, f5401524e5, f6659a3107, f8062cb7ce, f8f12e4e6b, f9f95681fd, faec2f0468, fb05e13ad1, fb5a96b1a2, fd361ab85f, fe1733741f]
+
+###### specify the assets to download ######
+# by default, these assets are downloaded for each scene:
+# mesh+3D semantics, lowres dslr, iphone data
+# see `scene_assets` and the dataset documentation page for more info on each asset
+default_assets: [
+                # dslr lists, images
+                dslr_train_test_lists_path, dslr_resized_dir, dslr_resized_mask_dir,
+                # dslr undisrtorted images
+                dslr_resized_undistorted_dir, dslr_resized_undistorted_mask_dir, dslr_nerfstudio_transform_undistorted_path,
+                # camera poses
+                dslr_colmap_dir, dslr_nerfstudio_transform_path,
+                # mesh
+                scan_mesh_path, scan_mesh_mask_path,
+                # annotation
+                scan_mesh_segs_path, scan_anno_json_path, scan_sem_mesh_path,
+                # iphone video and depth
+                iphone_video_path, iphone_video_mask_path, iphone_depth_path,
+                # camera poses
+                iphone_pose_intrinsic_imu_path, iphone_colmap_dir, iphone_exif_path,
+                iphone_nerfstudio_transform_path,
+                # panocam data
+                pano_rgb_dir, pano_anon_mask_dir, pano_depth_dir, pano_azim_dir, pano_elev_dir, pano_resized_rgb_dir, pano_resized_depth_dir, pano_resized_mask_dir, pano_resized_azim_dir, pano_resized_elev_dir
+              ]
+
+# uncomment this and comment the other asset options to specify individual assets
+# the full list of assets is under `scene_assets`
+# download_assets: []
+
+# uncomment this and comment the other asset options to specify options based on device or task
+# see below for possible options
+# download_options: []
+
+##############################################################
+############## Nothing to be changed below this ##############
+##############################################################
+# Options by task:
+#   - nvs_dslr: novel view synthesis with DSLR images
+#   - nvs_iphone: novel view synthesis with iPhone images
+#   - semantic: download RGB mesh and semantic annotations
+
+# Options by device:
+#   - scans: all scan related data - point cloud, mesh
+#   - dslr_hires: all dslr data including hires
+#   - iphone: all iphone RGBD data
+option_assets:
+  nvs_dslr: [dslr_train_test_lists_path, dslr_resized_dir, dslr_resized_mask_dir,
+        dslr_colmap_dir, dslr_nerfstudio_transform_path]
+  nvs_iphone: [iphone_video_path, iphone_video_mask_path, iphone_pose_intrinsic_imu_path,
+        iphone_colmap_dir]
+  semantic: [scan_mesh_path, scan_mesh_segs_path, scan_anno_json_path, scan_sem_mesh_path]
+  scans: [scan_transformed_poses_path, scan_pc_path, scan_pc_mask_path,
+        scan_mesh_path, scan_mesh_mask_path,
+        scan_mesh_segs_path, scan_anno_json_path, scan_sem_mesh_path]
+  dslr_hires: [dslr_train_test_lists_path, dslr_resized_dir, dslr_resized_mask_dir,
+        dslr_original_dir, dslr_original_mask_dir,
+        dslr_colmap_dir, dslr_nerfstudio_transform_path]
+  iphone: [iphone_video_path, iphone_video_mask_path, iphone_depth_path,
+        iphone_pose_intrinsic_imu_path, iphone_colmap_dir]
+  panocam: [pano_rgb_dir, pano_anon_mask_dir, pano_depth_dir, pano_azim_dir, pano_elev_dir, pano_resized_rgb_dir, 
+        pano_resized_depth_dir, pano_resized_mask_dir, pano_resized_azim_dir, pano_resized_elev_dir]
+
+# splits in the dataset
+splits: [nvs_sem_train, nvs_sem_val, nvs_test, sem_test, nvs_test_iphone]
+
+# other meta files to download
+meta_files:
+  - splits/nvs_sem_train.txt
+  - splits/nvs_sem_val.txt
+  - splits/nvs_test.txt
+  - splits/nvs_test_small.txt
+  - splits/sem_test.txt
+  - splits/nvs_test_iphone.txt
+  - metadata/scene_types.json
+  - metadata/semantic_classes.txt
+  - metadata/instance_classes.txt
+  - metadata/semantic_benchmark/top100.txt
+  - metadata/semantic_benchmark/top100_instance.txt
+  - metadata/semantic_benchmark/map_benchmark.csv
+
+#### all paths and directories to download for each scene
+scene_assets:
+  #### dslr ####
+  # images
+  # resized dslr images
+  - dslr_resized_dir
+  # anonymization masks for dslr resized dslr images
+  - dslr_resized_mask_dir
+  # original dslr images
+  - dslr_original_dir
+  # anonymization masks for original dslr images
+  - dslr_original_mask_dir
+  ## camera poses
+  # colmap models
+  - dslr_colmap_dir
+  # in nerfstudio format
+  - dslr_nerfstudio_transform_path
+  # train and test image lists
+  - dslr_train_test_lists_path
+  # undistorted dslr data
+  - dslr_resized_undistorted_dir
+  - dslr_resized_undistorted_mask_dir
+  - dslr_nerfstudio_transform_undistorted_path
+  ##### scan #####
+  ## scans
+  # point cloud
+  - scan_pc_path
+  # mask of anonymized points
+  - scan_pc_mask_path
+  # scanner positions
+  - scan_transformed_poses_path
+  ## mesh
+  # RGB mesh
+  - scan_mesh_path
+  # mask of anonymized mesh vertices
+  - scan_mesh_mask_path
+  ## 3d semantic annotation on mesh
+  # mesh surface segments
+  - scan_mesh_segs_path
+  # annotation on mesh segments
+  - scan_anno_json_path
+  # mesh with semantic labels on vertices
+  - scan_sem_mesh_path
+  # #### iphone ####
+  ## rgb
+  # rgb video
+  - iphone_video_path
+  # video of anonymization masks for rgb video
+  - iphone_video_mask_path
+  # depth, binary file
+  - iphone_depth_path
+  # ARKit metadata
+  - iphone_pose_intrinsic_imu_path
+  ## camera poses, similar to DSLR
+  - iphone_colmap_dir
+  - iphone_nerfstudio_transform_path
+  # exif data
+  - iphone_exif_path
+  ##### panocam ####
+  ## panocam data - original and resized
+  - pano_rgb_dir
+  - pano_anon_mask_dir
+  - pano_depth_dir
+  - pano_azim_dir
+  - pano_elev_dir
+  - pano_resized_rgb_dir
+  - pano_resized_depth_dir
+  - pano_resized_mask_dir
+  - pano_resized_azim_dir
+  - pano_resized_elev_dir
+
+# some assets are not present in the test sets
+exclude_assets:
+  # scan data, dslr test images and panocam data not present in the nvs test set
+  nvs_test: [iphone_depth_path,
+            scan_pc_path, scan_pc_mask_path, scan_transformed_poses_path,
+            scan_mesh_path, scan_mesh_mask_path,
+            scan_mesh_segs_path, scan_anno_json_path, scan_sem_mesh_path,
+            pano_rgb_dir, pano_anon_mask_dir, pano_depth_dir, pano_azim_dir, pano_elev_dir, 
+            pano_resized_rgb_dir, pano_resized_depth_dir, pano_resized_mask_dir, pano_resized_azim_dir, pano_resized_elev_dir]
+  # all annotation related files not present in the sem test set
+  sem_test: [scan_mesh_segs_path, scan_anno_json_path, scan_sem_mesh_path]
+  # only iphone training data, no scan, dslr data and panocam data in nvs iphone test set
+  nvs_test_iphone: [
+                    dslr_resized_dir, dslr_resized_mask_dir, dslr_original_dir, dslr_original_mask_dir,
+                    dslr_nerfstudio_transform_path, dslr_train_test_lists_path,
+                    dslr_resized_undistorted_dir, dslr_resized_undistorted_mask_dir, dslr_nerfstudio_transform_undistorted_path,
+                    dslr_colmap_dir,
+                    scan_pc_path, scan_pc_mask_path, scan_transformed_poses_path,
+                    scan_mesh_path, scan_mesh_mask_path, scan_mesh_segs_path, scan_anno_json_path, scan_sem_mesh_path,
+                    pano_rgb_dir, pano_anon_mask_dir, pano_depth_dir, pano_azim_dir, pano_elev_dir, 
+                    pano_resized_rgb_dir, pano_resized_depth_dir, pano_resized_mask_dir, pano_resized_azim_dir, pano_resized_elev_dir
+                  ]
+
+# unzip these assets
+zipped_assets: [
+  dslr_resized_dir, dslr_resized_mask_dir, dslr_original_dir, dslr_original_mask_dir,
+  dslr_resized_undistorted_dir, dslr_resized_undistorted_mask_dir, dslr_nerfstudio_transform_undistorted_path,
+  dslr_colmap_dir,
+  scan_pc_path, scan_mesh_path, scan_sem_mesh_path,
+  scan_mesh_segs_path, scan_anno_json_path,
+  iphone_video_mask_path, iphone_depth_path, iphone_pose_intrinsic_imu_path,
+  iphone_colmap_dir, iphone_nerfstudio_transform_path, iphone_exif_path,
+  # all panocam data is zipped
+  pano_rgb_dir, pano_anon_mask_dir, pano_depth_dir, pano_azim_dir, pano_elev_dir, pano_resized_rgb_dir, pano_resized_depth_dir, pano_resized_mask_dir, pano_resized_azim_dir, pano_resized_elev_dir
+]
+
+
+################################################################################
+# ScanNet++GS                                                                  #
+################################################################################
+# directory to download the ScanNet++GS .ply files
+# if this is specified, downloads only the ScanNet++GS data
+scannetpp_gs_url: https://scannetpp.mlsg.cit.tum.de/scannetpp/download/scannetpp_gs?version=v1&token=TOKEN&file=FILEPATH
+scannetpp_gs_dir:
+
